@@ -1,16 +1,123 @@
-# This is a sample Python script.
+from games.blackjack import jugar_blackjack
+from games.craps import jugar_craps
+from games.ruleta import jugar_ruleta
+from games.tragaperras import jugar_tragaperras
 
-# Press Mayús+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+usuarios = {}
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+def crear_cuenta():
+    usuario = input("Crea un nombre de usuario: ").strip()
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    if usuario in usuarios:
+        print("Ese usuario ya existe.")
+        return None
+
+    contraseña = input("Crea una contraseña: ").strip()
+
+    usuarios[usuario] = {
+        "contraseña": contraseña,
+        "fichas": 100
+    }
+
+    print(f"Cuenta creada. {usuario} tiene 100 fichas.")
+    return usuario
+
+
+def iniciar_sesion():
+    usuario = input("Nombre de usuario: ").strip()
+
+    if usuario not in usuarios:
+        print("Ese usuario no existe.")
+        return None
+
+    contraseña = input("Contraseña: ").strip()
+
+    if usuarios[usuario]["contraseña"] != contraseña:
+        print("Contraseña incorrecta.")
+        return None
+
+    return usuario
+
+
+def login():
+
+    while True:
+
+        print("\n=== INICIO ===")
+        print("1. Iniciar sesión")
+        print("2. Crear cuenta")
+        print("3. Salir")
+
+        opcion = input("> ").strip()
+
+        if opcion == "1":
+
+            usuario = iniciar_sesion()
+
+            if usuario:
+                return usuario
+
+        elif opcion == "2":
+
+            usuario = crear_cuenta()
+
+            if usuario:
+                return usuario
+
+        elif opcion == "3":
+            return None
+
+        else:
+            print("Opción no válida.")
+
+
+def menu(usuario):
+
+    while True:
+
+        fichas = usuarios[usuario]["fichas"]
+
+        print("\n=== CASINO ===")
+        print(f"Jugador: {usuario}")
+        print(f"Fichas: {fichas}")
+
+        print("1. Blackjack")
+        print("2. Craps")
+        print("3. Ruleta")
+        print("4. Tragaperras")
+        print("5. Cerrar sesión")
+        print("6. Salir")
+
+        opcion = input("> ").strip()
+
+        if opcion == "1":
+            usuarios[usuario]["fichas"] = jugar_blackjack(fichas)
+
+        elif opcion == "2":
+            usuarios[usuario]["fichas"] = jugar_craps(fichas)
+
+        elif opcion == "3":
+            usuarios[usuario]["fichas"] = jugar_ruleta(fichas)
+
+        elif opcion == "4":
+            usuarios[usuario]["fichas"] = jugar_tragaperras(fichas)
+
+        elif opcion == "5":
+            break
+
+        elif opcion == "6":
+            exit()
+
+        else:
+            print("Opción no válida.")
+
+
+while True:
+
+    usuario = login()
+
+    if usuario is None:
+        break
+
+    menu(usuario)

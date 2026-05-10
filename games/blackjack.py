@@ -5,9 +5,6 @@ mazo = ["A", 2, 3, 4, 5, 6, 7, 8, 9, 10, "J", "Q", "K",
         "A", 2, 3, 4, 5, 6, 7, 8, 9, 10, "J", "Q", "K",
         "A", 2, 3, 4, 5, 6, 7, 8, 9, 10, "J", "Q", "K"]
 
-STARTING_CHIPS = 100
-
-
 def barajar_mazo():
     mazo_barajado = mazo.copy()
     random.shuffle(mazo_barajado)
@@ -42,8 +39,7 @@ def mostrar_mano(nombre, mano):
     print(f"{nombre}: {mano} | Puntos: {calcular_puntos(mano)}")
 
 
-def jugar_blackjack():
-    fichas = STARTING_CHIPS
+def jugar_blackjack(fichas):
     mazo_barajado = barajar_mazo()
 
     mano_jugador = []
@@ -83,7 +79,7 @@ def jugar_blackjack():
         print("Te has pasado de 21. Pierdes.")
         mostrar_mano("Jugador", mano_jugador)
         mostrar_mano("Dealer", mano_dealer)
-        return
+        return fichas
 
     print()
     print("Turno del dealer")
@@ -109,5 +105,4 @@ def jugar_blackjack():
     else:
         print("Empate.")
 
-
-jugar_blackjack()
+    return fichas

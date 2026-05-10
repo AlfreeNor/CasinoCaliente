@@ -17,12 +17,9 @@ BLACK_NUMBERS = {
     20, 22, 24, 26, 28, 29, 31, 33, 35,
 }
 
-STARTING_CHIPS = 100
-
-
 class RouletteGame:
-    def __init__(self) -> None:
-        self.chips = STARTING_CHIPS
+    def __init__(self, fichas) -> None:
+        self.chips = fichas
 
     @staticmethod
     def get_color(number: int) -> str:
@@ -39,11 +36,11 @@ class RouletteGame:
     def show_rules(self) -> None:
         print("\nRULETA")
         print("Tipos de apuesta disponibles:")
-        print("  1. numero")
-        print("  2. color")
-        print("  3. paridad")
-        print("  4. docena")
-        print("  5. mitad")
+        print("  1. Numero")
+        print("  2. Color")
+        print("  3. Paridad")
+        print("  4. Docena")
+        print("  5. Mitad")
 
     def ask_bet_amount(self) -> int:
         while True:
@@ -178,17 +175,13 @@ class RouletteGame:
                 return False
             print("Respuesta no válida.")
 
-    def run(self) -> None:
+    def run(self) -> int:
         self.show_rules()
         while self.play_round():
             pass
         print("\nGracias por jugar.")
+        return self.chips
 
-
-def main() -> None:
-    game = RouletteGame()
-    game.run()
-
-
-if __name__ == "__main__":
-    main()
+def jugar_ruleta(fichas):
+    game = RouletteGame(fichas)
+    return game.run()       

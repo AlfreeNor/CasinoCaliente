@@ -1,7 +1,5 @@
 import random
 
-STARTING_CHIPS = 100
-
 simbolos = ["🍒", "🍋", "🔔", "⭐", "7"]
 
 
@@ -23,8 +21,7 @@ def calcular_premio(resultado, apuesta):
         return 0
 
 
-def jugar_tragaperras():
-    fichas = STARTING_CHIPS
+def jugar_tragaperras(fichas):
 
     print("Bienvenido a la Tragaperras")
     print(f"Tienes {fichas} fichas")
@@ -63,5 +60,4 @@ def jugar_tragaperras():
 
     print("Gracias por jugar a la tragaperras.")
 
-
-jugar_tragaperras()
+    return fichas

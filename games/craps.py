@@ -2,12 +2,9 @@ import random
 from typing import Tuple
 
 
-STARTING_CHIPS = 100
-
-
 class CrapsGame:
-    def __init__(self) -> None:
-        self.chips = STARTING_CHIPS
+    def __init__(self, fichas) -> None:
+        self.chips = fichas
         self.point = None
 
     @staticmethod
@@ -19,8 +16,6 @@ class CrapsGame:
 
     def show_rules(self) -> None:
         print("\nCRAPS")
-        print(f"Empiezas con {STARTING_CHIPS} fichas cada vez que ejecutas el archivo.")
-        print("Este juego usa la apuesta básica Pass Line:")
         print("\nTirada inicial, llamada come-out roll:")
         print("  - Si sale 7 u 11, ganas.")
         print("  - Si sale 2, 3 o 12, pierdes.")
@@ -112,7 +107,7 @@ class CrapsGame:
                 return False
             print("Respuesta no válida.")
 
-    def run(self) -> None:
+    def run(self) -> int:
         self.show_rules()
 
         playing = True
@@ -121,12 +116,9 @@ class CrapsGame:
             playing = self.ask_play_again()
 
         print("\nGracias por jugar.")
+        return self.chips
 
 
-def main() -> None:
-    game = CrapsGame()
-    game.run()
-
-
-if __name__ == "__main__":
-    main()
+def jugar_craps(fichas):
+    game = CrapsGame(fichas)
+    return game.run()

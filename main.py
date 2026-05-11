@@ -2,48 +2,47 @@ from games.blackjack import jugar_blackjack
 from games.craps import jugar_craps
 from games.ruleta import jugar_ruleta
 from games.tragaperras import jugar_tragaperras
-
-usuarios = {}
+from database.supabase_client import crear_usuario, iniciar_usuario, actualizar_fichas, obtener_usuario
 
 
 def crear_cuenta():
     usuario = input("Crea un nombre de usuario: ").strip()
 
-    if usuario in usuarios:
+    if usuario == "":
+        print("El nombre de usuario no puede estar vacío.")
+        return None
+
+    contrasena = input("Crea una contraseña: ").strip()
+
+    if contrasena == "":
+        print("La contraseña no puede estar vacía.")
+        return None
+
+    nuevo_usuario = crear_usuario(usuario, contrasena)
+
+    if nuevo_usuario is None:
         print("Ese usuario ya existe.")
         return None
 
-    contraseña = input("Crea una contraseña: ").strip()
-
-    usuarios[usuario] = {
-        "contraseña": contraseña,
-        "fichas": 100
-    }
-
     print(f"Cuenta creada. {usuario} tiene 100 fichas.")
-    return usuario
+    return nuevo_usuario
 
 
 def iniciar_sesion():
     usuario = input("Nombre de usuario: ").strip()
+    contrasena = input("Contraseña: ").strip()
 
-    if usuario not in usuarios:
-        print("Ese usuario no existe.")
+    usuario_logueado = iniciar_usuario(usuario, contrasena)
+
+    if usuario_logueado is None:
+        print("Usuario o contraseña incorrectos.")
         return None
 
-    contraseña = input("Contraseña: ").strip()
-
-    if usuarios[usuario]["contraseña"] != contraseña:
-        print("Contraseña incorrecta.")
-        return None
-
-    return usuario
+    return usuario_logueado
 
 
 def login():
-
     while True:
-
         print("\n=== INICIO ===")
         print("1. Iniciar sesión")
         print("2. Crear cuenta")
@@ -52,14 +51,12 @@ def login():
         opcion = input("> ").strip()
 
         if opcion == "1":
-
             usuario = iniciar_sesion()
 
             if usuario:
                 return usuario
 
         elif opcion == "2":
-
             usuario = crear_cuenta()
 
             if usuario:
@@ -72,14 +69,22 @@ def login():
             print("Opción no válida.")
 
 
+def guardar_fichas(usuario, fichas):
+    actualizar_fichas(usuario["usuario"], fichas)
+    usuario["fichas"] = fichas
+
+
 def menu(usuario):
-
     while True:
+        usuario_actualizado = obtener_usuario(usuario["usuario"])
 
-        fichas = usuarios[usuario]["fichas"]
+        if usuario_actualizado is not None:
+            usuario = usuario_actualizado
+
+        fichas = usuario["fichas"]
 
         print("\n=== CASINO ===")
-        print(f"Jugador: {usuario}")
+        print(f"Jugador: {usuario['usuario']}")
         print(f"Fichas: {fichas}")
 
         print("1. Blackjack")
@@ -92,16 +97,20 @@ def menu(usuario):
         opcion = input("> ").strip()
 
         if opcion == "1":
-            usuarios[usuario]["fichas"] = jugar_blackjack(fichas)
+            nuevas_fichas = jugar_blackjack(fichas)
+            guardar_fichas(usuario, nuevas_fichas)
 
         elif opcion == "2":
-            usuarios[usuario]["fichas"] = jugar_craps(fichas)
+            nuevas_fichas = jugar_craps(fichas)
+            guardar_fichas(usuario, nuevas_fichas)
 
         elif opcion == "3":
-            usuarios[usuario]["fichas"] = jugar_ruleta(fichas)
+            nuevas_fichas = jugar_ruleta(fichas)
+            guardar_fichas(usuario, nuevas_fichas)
 
         elif opcion == "4":
-            usuarios[usuario]["fichas"] = jugar_tragaperras(fichas)
+            nuevas_fichas = jugar_tragaperras(fichas)
+            guardar_fichas(usuario, nuevas_fichas)
 
         elif opcion == "5":
             break
@@ -114,7 +123,6 @@ def menu(usuario):
 
 
 while True:
-
     usuario = login()
 
     if usuario is None:

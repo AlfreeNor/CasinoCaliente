@@ -5,6 +5,7 @@ mazo = ["A", 2, 3, 4, 5, 6, 7, 8, 9, 10, "J", "Q", "K",
         "A", 2, 3, 4, 5, 6, 7, 8, 9, 10, "J", "Q", "K",
         "A", 2, 3, 4, 5, 6, 7, 8, 9, 10, "J", "Q", "K"]
 
+
 def barajar_mazo():
     mazo_barajado = mazo.copy()
     random.shuffle(mazo_barajado)
@@ -39,7 +40,38 @@ def mostrar_mano(nombre, mano):
     print(f"{nombre}: {mano} | Puntos: {calcular_puntos(mano)}")
 
 
+def pedir_apuesta(fichas):
+    while True:
+        apuesta = input(f"Introduce tu apuesta (Saldo: {fichas} fichas): ").strip()
+
+        if not apuesta.isdigit():
+            print("Introduce un número válido.")
+            continue
+
+        apuesta = int(apuesta)
+
+        if apuesta <= 0:
+            print("La apuesta debe ser mayor que 0.")
+            continue
+
+        if apuesta > fichas:
+            print("No tienes suficientes fichas.")
+            continue
+
+        return apuesta
+
+
 def jugar_blackjack(fichas):
+    if fichas <= 0:
+        print("No tienes fichas para jugar.")
+        return fichas
+
+    print("Bienvenido al Blackjack")
+    print(f"Tienes {fichas} fichas")
+
+    apuesta = pedir_apuesta(fichas)
+    fichas -= apuesta
+
     mazo_barajado = barajar_mazo()
 
     mano_jugador = []
@@ -51,24 +83,23 @@ def jugar_blackjack(fichas):
     mano_dealer.append(repartir_carta(mazo_barajado))
     mano_dealer.append(repartir_carta(mazo_barajado))
 
-    print("Bienvenido al Blackjack")
-    print(f"Fichas iniciales: {fichas}")
     print()
-
     mostrar_mano("Jugador", mano_jugador)
     print(f"Dealer: [{mano_dealer[0]}, ?]")
     print()
 
     while calcular_puntos(mano_jugador) < 21:
-        opcion = input("¿Quieres pedir carta? (s/n): ").lower()
+        opcion = input("¿Quieres pedir carta? (s/n): ").strip().lower()
 
         if opcion == "s":
             nueva_carta = repartir_carta(mazo_barajado)
             mano_jugador.append(nueva_carta)
             print(f"Has recibido: {nueva_carta}")
             mostrar_mano("Jugador", mano_jugador)
+
         elif opcion == "n":
             break
+
         else:
             print("Opción no válida. Escribe s o n.")
 
@@ -79,6 +110,7 @@ def jugar_blackjack(fichas):
         print("Te has pasado de 21. Pierdes.")
         mostrar_mano("Jugador", mano_jugador)
         mostrar_mano("Dealer", mano_dealer)
+        print(f"Fichas actuales: {fichas}")
         return fichas
 
     print()
@@ -97,12 +129,19 @@ def jugar_blackjack(fichas):
     print()
 
     if puntos_dealer > 21:
+        fichas += apuesta * 2
         print("El dealer se ha pasado. Ganas.")
+
     elif puntos_jugador > puntos_dealer:
+        fichas += apuesta * 2
         print("Ganas.")
+
     elif puntos_jugador < puntos_dealer:
         print("Pierdes.")
+
     else:
+        fichas += apuesta
         print("Empate.")
 
+    print(f"Fichas actuales: {fichas}")
     return fichas

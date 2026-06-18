@@ -1,8 +1,8 @@
-# 🎰 CasinoCaliente
+# 🎰 CasinoCreativo
 
 ## 📌 Descripción del proyecto
 
-CasinoCaliente es una aplicación desarrollada en Python que simula el funcionamiento de un casino digital.
+CasinoCreativo es una aplicación desarrollada en Python que simula el funcionamiento de un casino digital.
 El usuario puede acceder a diferentes juegos de azar desde un menú principal y apostar dinero virtual en cada uno de ellos.
 
 El objetivo del proyecto es aplicar conceptos fundamentales de programación en Python como:
